@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ user.profile.get_screen_name }}{% endblock %}
+
+{% block content %}
+
+	{% include 'includes/profile_banner_meta.html' %}
+
+	<div class="section-wrap">
+		<div class="section overflowable">
+			
+			{% include 'includes/profile_sidebar_menu.html' %}
+
+			<div class="content right">
+
+				<!-- LATEST STORIES -->
+				<div class="headline buttons primary">
+					<h4>{% trans "Latest Stories" %}</h4>
+					{% if user.stories.count > 3 %}
+						<a href="{% url 'story:list' user.username %}" class="button mid-short dark-light">{% trans "More..." %}</a>
+					{% endif %}
+				</div>
+
+				<div class="blog-post-preview v1 column-wrap">
+					{% for story in latest_stories %}
+						{% include 'story/includes/story_list.html' %}
+					{% empty %}
+						<h3 class="mb-5">
+							{% if not request.user == user %}
+								{{ user.profile.get_screen_name }} hasn't published any story yet.
+							{% else %}
+								You haven't published any story yet.
+							{% endif %}
+						</h3>
+					{% endfor %}
+				</div>
+				<!-- / LATEST STORIES -->
+
+				<!-- DRAFTS -->
+				{% if user == request.user %}
+					{% if drafts %}
+						<div class="headline buttons primary">
+							<h4>{% trans "My Drafts" %}</h4>
+							<a href="{% url 'story:drafts' request.user.username %}" class="button mid-short dark-light">{% trans "More..." %}</a>
+						</div>
+						<div class="blog-post-preview v1 column-wrap">
+							{% for story in drafts %}
+								{% include 'story/includes/story_list.html' %}
+							{% endfor %}
+						</div>
+						<div class="clearfix"></div>
+					{% endif %}
+				{% endif %}
+				<!-- / DRAFTS -->
+				
+				{% if recommends %}
+					<!-- RECOMMENDS -->
+					<div class="headline buttons primary">
+						<h4>{% trans "Recommends" %}</h4>
+						{% if user.stories_favorited.count > 3 %}
+							<a href="{% url 'story:favorites' user.username %}" class="button mid-short dark-light">{% trans "More..." %}</a>
+						{% endif %}
+					</div>
+					<div class="blog-post-preview v1 column-wrap">
+						{% for story in recommends %}
+							{% include 'story/includes/story_list.html' %}
+						{% endfor %}
+					</div>
+					<div class="clearfix"></div>
+					<!-- / RECOMMENDS -->
+				{% endif %}
+				
+				{% if user == request.user %}
+					{% if bookmarks %}
+						<!-- BOOKMARKS -->
+						<div class="headline buttons primary">
+							<h4>{% trans "Stories to read later" %}</h4>
+							{% if request.user.stories_bookmarked.count > 3 %}
+								<a href="{% url 'story:bookmarks' request.user.username %}" class="button mid-short dark-light">{% trans "More..." %}</a>
+							{% endif %}
+						</div>
+						<div class="blog-post-preview v1 column-wrap">
+							{% for story in bookmarks %}
+								{% include 'story/includes/story_list.html' %}
+							{% endfor %}
+						</div>
+						<div class="clearfix"></div>
+					{% endif %}
+				{% endif %}
+				<!-- / BOOKMARKS -->
+				
+				{% if followings %}
+				<!-- FOLLOWING -->
+					<div class="headline buttons primary">
+						<h4>{% trans "Recent Follows" %}</h4>
+						{% if user.profile.get_following_count > 3 %}
+							<a href="{% url 'following' user.username %}" class="button mid-short dark-light">{% trans "See Following" %}</a>
+						{% endif %}
+					</div>
+
+					<!-- FOLLOW LIST -->
+					<div class="follow-list">
+						{% for follow_user in followings %}
+							{% include 'accounts/includes/follow_list.html' %}
+						{% endfor %}				
+					</div>
+					<!-- /FOLLOW LIST -->
+					<div class="clearfix"></div>
+				{% endif %}
+
+				{% if user == request.user %}
+					{% if comments %}
+						<!-- RECENT COMMENTS -->
+						<div class="headline buttons primary">
+							<h4>{% trans "Recent Comments" %}</h4>
+							{% if request.user.user_comments.count > 3 %}
+								<a href="{% url 'comments' username=request.user %}" class="button mid-short dark-light">{% trans "More..." %}</a>
+							{% endif %}
+						</div>
+
+						<!-- COMMENTS -->
+						<div class="comment-list">
+							{% for comment in comments %}
+							<div class="comment-wrap">
+								<a href="{{ comment.name.get_absolute_url }}">
+									<figure class="user-avatar medium">
+										<img src="{% if comment.name.profile.avatar %}{{ comment.name.profile.avatar.url }}{% else %}{% static 'footystory/images/avatar.png' %}{% endif %}" alt="{{ comment.name.profile.get_screen_name }}">
+									</figure>
+								</a>
+								<div class="comment">
+									<p class="text-header">
+										<a href="{{ comment.story.get_absolute_url }}">{{ comment.story.title }}</a>
+									</p>
+									<p class="timestamp">{{ comment.created|date:"M j, Y" }}</p>
+									<a href="{{ comment.story.get_absolute_url }}#comment-{{ comment.id }}" class="reply">View comment</a>
+									<p>{{ comment.body|truncatechars:200|linebreaks }}</p>
+								</div>
+							</div>
+							{% if not forloop.last %}
+								<hr class="line-separator">
+							{% endif %}
+							{% endfor %}
+						</div>
+						<!-- / COMMENTS -->
+					{% endif %}
+				{% endif %}
+
+			</div>
+			<!-- CONTENT -->
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<!-- /SECTION -->
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'footystory/js/follow.js' %}"></script>
+{% endblock %} 

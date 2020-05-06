@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Login to FootyStory" %}{% endblock %}
+
+{% block content %}
+
+<div class="form-block">
+
+	<div class="form-block-headline secondary">
+		<h2>{% trans "Login to your Account" %}</h2>
+		<p>{% trans "Enter now to your account and start sharing stories!" %}</p>
+	</div>
+
+	<div class="form-block-content">
+		
+		<form method="post" action="">
+			{% csrf_token %}
+
+			{% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            {% for errors in form.non_field_errors %}
+            	<div class="alert alert-danger" role="alert">{{ errors }}</div>
+            {% endfor %}
+
+            <div class="form-group">
+			    <label class="form-control-label rl-label required {% if form.username.errors %}invalid{% endif %}" for="{{ form.username.id_for_label }}">{% trans "Username" %}</label>
+
+			    <input autofocus="" type="text" class="form-control {% if form.username.errors %}invalid{% endif %}" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" {% if form.username.value != None %}value="{{ form.username.value|stringformat:'s' }}"{% endif %} maxlength="{{ form.username.field.max_length }}" placeholder="{% trans 'Enter your username' %}" {% if form.username.field.required %}required{% endif %} />
+                
+                {% for error in form.username.errors %}
+			    	<p class="error">{{ error }}</p>
+			    {% endfor %}
+
+			    {% if form.username.help_text %}
+			    	<small class="form-text text-muted">{{ form.username.help_text }}</small>
+			    {% endif %}
+			</div>
+
+			<div class="form-group">
+			    <label class="form-control-label rl-label required {% if form.password.errors %}invalid{% endif %}" for="{{ form.password.id_for_label }}">{% trans "Password" %}</label>
+
+			    <input type="password" class="form-control {% if form.password.errors %}invalid{% endif %}" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" placeholder="{% trans 'Enter your password' %}" {% if form.password.field.required %}required{% endif %} />
+
+			    {% for error in form.password.errors %}
+			    	<p class="error">{{ error }}</p>
+			    {% endfor %}
+
+			    {% if form.password.help_text %}
+			    	<small class="form-text text-muted">{{ form.password.help_text }}</small>
+			    {% endif %}
+			</div>
+
+			<button class="button mid secondary" type="submit">{% trans "Login" %}</button>
+			<input type="hidden" name="next" value="{{ next }}" />
+
+		</form>
+
+		<hr class="line-separator">
+
+		<p class="spaced">{% trans "Forgot your password?" %} <a href="{% url 'password_reset' %}" class="secondary">{% trans "Click here." %}</a></p>
+
+		<p class="spaced">{% trans "Lost activation email?" %} <a href="{% url 'resend_activation' %}" class="secondary">{% trans "Click here." %}</a></p>
+
+		<p class="spaced mb-0">{% trans "You don't have an account?" %} <a href="{% url 'signup' %}" class="secondary">{% trans "Sign up." %}</a></p>
+
+	</div>
+	<!-- /FORM CONTENT -->
+</div>
+<!-- /FORM -->
+
+{% endblock %}

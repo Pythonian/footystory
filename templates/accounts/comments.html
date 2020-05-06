@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "My Comments" %}  &#8212; {{ user.profile.get_screen_name }}{% endblock %}
+
+{% block content %}
+
+	{% include 'includes/profile_banner_meta.html' %}
+
+	<div class="section-wrap">
+		<div class="section overflowable">
+			
+			{% include 'includes/profile_sidebar_menu.html' %}
+
+			<div class="content right">
+
+				{% if user == request.user %}
+					<div class="headline buttons primary">
+						<h4>{% trans "Comments" %}</h4>
+					</div>
+
+					<!-- COMMENTS -->
+					<div class="comment-list">
+						{% for comment in comments %}
+						<div class="comment-wrap">
+							<a href="{{ comment.name.get_absolute_url }}">
+								<figure class="user-avatar medium">
+									<img src="{% if comment.name.profile.avatar %}{{ comment.name.profile.avatar.url }}{% else %}{% static 'footystory/images/avatar.png' %}{% endif %}" alt="{{ comment.name.profile.get_screen_name }}">
+								</figure>
+							</a>
+							<div class="comment">
+								<p class="text-header">
+									<a href="{{ comment.story.get_absolute_url }}">{{ comment.story.title }}</a>
+								</p>
+								<p class="timestamp">{{ comment.created|date:"M j, Y" }}</p>
+								<a href="{{ comment.story.get_absolute_url }}#comment-{{ comment.id }}" class="reply">View comment</a>
+								<p>{{ comment.body|truncatechars:200|linebreaks }}</p>
+							</div>
+						</div>
+						{% if not forloop.last %}
+							<hr class="line-separator">
+						{% endif %}
+						{% empty %}
+							<h3 class="mb-5">You haven't made any comment yet.</h3>
+						{% endfor %}
+					</div>
+					<!-- / COMMENTS -->
+				{% endif %}
+
+			</div>
+			<!-- CONTENT -->
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<!-- /SECTION -->
+
+{% endblock %}

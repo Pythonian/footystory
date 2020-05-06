@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Edit your Profile" %}{% endblock %}
+
+{% block content %}
+
+<div class="section-wrap">
+	<div class="section overflowable">
+
+		<div class="sidebar left">
+			<ul class="dropdown hover-effect">
+				<li class="dropdown-item active">
+					<a href="{% url 'settings' request.user.username %}">{% trans "Profile" %}</a>
+				</li>
+				<li class="dropdown-item">
+					<a href="{% url 'password_change' %}">{% trans "Password" %}</a>
+				</li>
+			</ul>
+		</div>
+
+		<div class="content right">
+            <div class="headline buttons primary">
+                <h4>{% trans "Edit Profile" %}</h4>
+            	<a class="button mid-short dark-light" href="{{ request.user.get_absolute_url }}">{% trans "Cancel" %}</a>
+            </div>
+
+        	<div class="form-box-item">
+				<form method="post" action="" enctype="multipart/form-data">
+					{% csrf_token %}
+
+					{% for hidden in form.hidden_fields %}
+		                {{ hidden }}
+		            {% endfor %}
+
+		            {% for errors in form.non_field_errors %}
+		                <div class="alert alert-danger" role="alert">{{ errors }}</div>
+		            {% endfor %}
+
+		            <div class="form-row">
+					    <div class="form-group col-md-6">
+					    	<label for="{{ user_form.first_name.id_for_label }}" class="col-form-label {% if user_form.first_name.errors %}invalid{% endif %}">{% trans 'First name' %}</label>
+
+					      	<input type="text" class="form-control {% if user_form.first_name.errors %}invalid{% endif %}" name="{{ user_form.first_name.name }}" id="{{ user_form.first_name.id_for_label }}" {% if user_form.first_name.value != None %}value="{{ user_form.first_name.value|stringformat:'s' }}"{% endif %} maxlength="{{ user_form.first_name.field.max_length }}" placeholder="{% trans 'Enter your first name' %}" {% if user_form.first_name.field.required %}required{% endif %} />
+
+					      	{% for error in user_form.first_name.errors %}
+						    	<p class="error">{{ error }}</p>
+						    {% endfor %}
+
+						    {% if user_form.first_name.help_text %}
+						    	<small class="form-text text-muted">{{ user_form.first_name.help_text }}</small>
+						    {% endif %}
+					    </div>
+
+					    <div class="form-group col-md-6">
+					    	<label for="{{ user_form.last_name.id_for_label }}" class="col-form-label {% if user_form.last_name.errors %}invalid{% endif %}">{% trans 'Last name' %}</label>
+
+					      	<input type="text" class="form-control {% if user_form.last_name.errors %}invalid{% endif %}" name="{{ user_form.last_name.name }}" id="{{ user_form.last_name.id_for_label }}" {% if user_form.last_name.value != None %}value="{{ user_form.last_name.value|stringformat:'s' }}"{% endif %} maxlength="{{ user_form.last_name.field.max_length }}" placeholder="{% trans 'Enter your last name' %}" {% if user_form.last_name.field.required %}required{% endif %} />
+
+					      	{% for error in user_form.last_name.errors %}
+						    	<p class="error">{{ error }}</p>
+						    {% endfor %}
+
+						    {% if user_form.last_name.help_text %}
+						    	<small class="form-text text-muted">{{ user_form.last_name.help_text }}</small>
+						    {% endif %}
+					    </div>
+					</div>
+
+					<div class="form-group">
+					    <label for="{{ profile_form.avatar.id_for_label }}" class="rl-label {% if profile_form.avatar.errors %}invalid{% endif %}">{% trans 'Avatar' %}</label>
+					    <input id="{{ profile_form.avatar.id_for_label }}" name="{{ profile_form.avatar.name }}" type="file" class="form-control-file  {% if profile_form.avatar.errors %}invalid{% endif %}">
+					    
+					    {% if user.profile.avatar %}
+							<div class="profile-image">
+								<div class="profile-image-data">
+									<figure class="user-avatar medium">
+										<img src="{{ user.profile.avatar.url }}">
+									</figure>
+
+									<p class="text-header">Current Avatar</p>
+									<p class="upload-details">70px * 70px</p>
+								</div>
+							</div>
+							<div class="form-check">
+								<input id="avatar-clear_id" name="avatar-clear" type="checkbox" class="form-check-input" /> 
+								<label for="avatar-clear_id" class="form-check-label">Remove current avatar</label>
+							</div>
+						{% endif %}
+
+						{% for error in profile_form.avatar.errors %}
+						    <p class="error">{{ error }}</p>
+						{% endfor %}
+
+						{% if profile_form.avatar.help_text %}
+					    	<small class="form-text text-muted">{{ profile_form.avatar.help_text }}</small>
+					    {% endif %}
+					</div>
+
+					<div class="form-row">
+					    <div class="form-group col-md-6">
+					    	<label for="{{ user_form.email.id_for_label }}" class="col-form-label rl-label required {% if user_form.email.errors %}invalid{% endif %}">{% trans 'Email' %}</label>
+
+					      	<input type="email" class="form-control {% if user_form.email.errors %}invalid{% endif %}" name="{{ user_form.email.name }}" id="{{ user_form.email.id_for_label }}" {% if user_form.email.value != None %}value="{{ user_form.email.value|stringformat:'s' }}"{% endif %} maxlength="{{ user_form.email.field.max_length }}" placeholder="{% trans 'Enter your email' %}" {% if user_form.email.field.required %}required{% endif %} />
+
+					      	{% for error in user_form.email.errors %}
+						    	<p class="error">{{ error }}</p>
+						    {% endfor %}
+
+						    {% if user_form.email.help_text %}
+						    	<small class="form-text text-muted">{{ user_form.email.help_text }}</small>
+						    {% endif %}
+					    </div>
+
+					    <div class="form-group col-md-6">
+					    	<label for="{{ profile_form.website.id_for_label }}" class="col-form-label {% if profile_form.website.errors %}invalid{% endif %}">{% trans 'Website' %}</label>
+
+					      	<input type="url" class="form-control {% if profile_form.website.errors %}invalid{% endif %}" name="{{ profile_form.website.name }}" id="{{ profile_form.website.id_for_label }}" {% if profile_form.website.value != None %}value="{{ profile_form.website.value|stringformat:'s' }}"{% endif %} maxlength="{{ profile_form.website.field.max_length }}" placeholder="{% trans 'Enter your website link' %}" {% if profile_form.website.field.required %}required{% endif %} />
+
+					      	{% for error in profile_form.website.errors %}
+						    	<p class="error">{{ error }}</p>
+						    {% endfor %}
+
+						    {% if profile_form.website.help_text %}
+						    	<small class="form-text text-muted">{{ profile_form.website.help_text }}</small>
+						    {% endif %}
+					    </div>
+					</div>
+
+					<div class="form-row">
+					    <div class="form-group col-md-6">
+					    	<label for="{{ profile_form.favorite_club.id_for_label }}" class="col-form-label {% if profile_form.favorite_club.errors %}invalid{% endif %}">{% trans 'Your Club' %}</label>
+
+					      	<input type="text" class="form-control {% if profile_form.favorite_club.errors %}invalid{% endif %}" name="{{ profile_form.favorite_club.name }}" id="{{ profile_form.favorite_club.id_for_label }}" {% if profile_form.favorite_club.value != None %}value="{{ profile_form.favorite_club.value|stringformat:'s' }}"{% endif %} maxlength="{{ profile_form.favorite_club.field.max_length }}" placeholder="{% trans 'Enter your favorite Football Club' %}" {% if profile_form.favorite_club.field.required %}required{% endif %} />
+
+					      	{% for error in profile_form.favorite_club.errors %}
+						    	<p class="error">{{ error }}</p>
+						    {% endfor %}
+
+						    {% if profile_form.favorite_club.help_text %}
+						    	<small class="form-text text-muted">{{ profile_form.favorite_club.help_text }}</small>
+						    {% endif %}
+					    </div>
+
+					    <div class="form-group col-md-6">
+					    	<label for="{{ profile_form.location.id_for_label }}" class="col-form-label {% if profile_form.location.errors %}invalid{% endif %}">{% trans 'Your location' %}</label>
+
+					      	<input type="text" class="form-control {% if profile_form.location.errors %}invalid{% endif %}" name="{{ profile_form.location.name }}" id="{{ profile_form.location.id_for_label }}" {% if profile_form.location.value != None %}value="{{ profile_form.location.value|stringformat:'s' }}"{% endif %} maxlength="{{ profile_form.location.field.max_length }}" placeholder="{% trans 'Enter your location' %}" {% if profile_form.location.field.required %}required{% endif %} />
+
+					      	{% for error in profile_form.location.errors %}
+						    	<p class="error">{{ error }}</p>
+						    {% endfor %}
+
+						    {% if profile_form.location.help_text %}
+						    	<small class="form-text text-muted">{{ profile_form.location.help_text }}</small>
+						    {% endif %}
+					    </div>
+					</div>
+
+					<div class="form-group">
+					    <label for="{{ profile_form.about.id_for_label }}" class="col-form-label {% if profile_form.about.errors %}invalid{% endif %}">{% trans 'About yourself' %}</label>
+					    <textarea class="form-control {% if profile_form.about.errors %}invalid{% endif %}" id="{{ profile_form.about.id_for_label }}" name="{{ profile_form.about.name }}" rows="{{ profile_form.about.field.rows }}" cols="{{ profile_form.about.field.cols }}" placeholder="{% trans 'Tell us about yourself in 140 characters.' %}" {% if profile_form.about.field.required %}required{% endif %}>{% if profile_form.about.value != None %}{{ profile_form.about.value|stringformat:'s' }}{% endif %}</textarea>
+
+					    {% for error in profile_form.about.errors %}
+						    <p class="error">{{ error }}</p>
+						{% endfor %}
+						
+						{% if profile_form.about.help_text %}
+					    	<small class="form-text text-muted">{{ profile_form.about.help_text }}</small>
+					    {% endif %}
+					</div>
+
+					<button class="button mid primary">Save Changes</button>
+
+				</form>
+
+			</div>
+
+		</div>
+
+		<div class="clearfix"></div>
+	</div>
+</div>
+
+{% endblock %}

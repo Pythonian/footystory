@@ -1,0 +1,207 @@
+.author-profile-banner {
+    1background: url("../images/profile_banner.jpg") no-repeat center;
+    background: linear-gradient(to right, #05e6aa, #1cbdf9);
+    background-size: cover;
+    min-height: 100px;
+}
+
+@media screen and (max-width: 935px) {
+    .author-profile-banner {
+        display: none;
+    }
+}
+
+.author-profile-meta-wrap {
+    border-top: 1px solid #ebebeb;
+    border-bottom: 1px solid #ebebeb;
+    background-color: #fff;
+}
+
+.author-profile-meta {
+    min-height: 100px;
+    padding-top: 15px;
+}
+
+.author-profile-info {
+    overflow: hidden;
+    padding-left: 300px;
+}
+
+.author-profile-info .author-profile-info-item {
+    float: left;
+    height: 70px;
+    border-right: 1px solid #ebebeb;
+    padding: 16px 70px 0 32px;
+}
+
+.author-profile-info .author-profile-info-item:last-child {
+    border-right: none;
+    padding-right: 0;
+}
+
+.author-profile-info .author-profile-info-item p {
+    font-size: 0.8125em;
+    line-height: 20px;
+}
+
+.author-profile-info .author-profile-info-item p a:hover {
+    text-decoration: underline;
+}
+
+.author-profile-info .author-profile-info-item p .primary {
+    color: #06b99b;
+}
+
+.author-profile-info .author-profile-info-item p .secondary {
+    color: #1cbdf9;
+}
+
+.author-profile-info .author-profile-info-item p .tertiary {
+    color: #e61852;
+}
+
+/* FOLLOW LIST */
+
+.follow-list {
+    width: 870px;
+    margin: 0 auto;
+}
+
+.follow-list .follow-list-item {
+    height: 94px;
+    padding: 11px 17px 11px 92px;
+    border: 1px solid #ebebeb;
+    margin-bottom: 14px;
+    background-color: #fff;
+    position: relative;
+}
+
+.follow-list .follow-list-item .user-avatar {
+    position: absolute;
+    top: 11px;
+    left: 11px;
+}
+
+.follow-list .follow-list-item .fl-item-info {
+    float: left;
+    height: 70px;
+    padding: 0 16px;
+}
+
+.follow-list .follow-list-item .fl-item-info:last-child {
+    border-right: none;
+    padding-right: 0;
+}
+
+.follow-list .follow-list-item .fl-item-info.fl-description {
+    width: 583px;
+    padding: 6px 10px 0 0;
+}
+
+.follow-list .follow-list-item .fl-item-info.fl-description .text-header {
+    font-size: 1em;
+    margin-bottom: 5px;
+}
+
+.follow-list .follow-list-item .fl-item-info.fl-description p {
+    line-height: 18px;
+}
+
+.follow-list .follow-list-item .fl-item-info.fl-button {
+    padding-top: 20px;
+}
+
+@media screen and (max-width: 1260px) {
+    .author-profile-info {
+        padding-left: 0;
+        padding-top: 15px;
+        width: 270px;
+        margin: 0 auto;
+    }
+    .author-profile-info .author-profile-info-item {
+        float: none;
+        border-right: none;
+        padding: 0;
+        padding-left: 32px;
+    }
+    .author-profile-info .author-profile-info-item p {
+        font-size: 0.8125em;
+        line-height: 20px;
+    }
+    .author-profile-info .author-profile-info-item p a:hover {
+        text-decoration: underline;
+    }
+    .author-profile-info .author-profile-info-item p .primary {
+        color: #06b99b;
+    }
+    .author-profile-info .author-profile-info-item p .secondary {
+        color: #1cbdf9;
+    }
+    .author-profile-info .author-profile-info-item p .tertiary {
+        color: #e61852;
+    }
+    .section .sidebar.author-profile {
+        position: static;
+    }
+}
+
+@media screen and (max-width: 935px) {
+    .follow-list {
+        width: 598px;
+    }
+    .follow-list .follow-list-item .fl-item-info.fl-product-items {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 630px) {
+    .follow-list {
+        width: 270px;
+    }
+    .follow-list .follow-list-item {
+        height: auto;
+        padding: 90px 11px 20px;
+    }
+    .follow-list .follow-list-item .user-avatar {
+        left: 50%;
+        margin-left: -35px;
+    }
+    .follow-list .follow-list-item .fl-item-info {
+        float: none;
+        height: auto;
+        border-right: none;
+        padding: 0;
+    }
+    .follow-list .follow-list-item .fl-item-info.fl-description {
+    }
+
+    .follow-list .follow-list-item .fl-item-info.fl-description {
+        width: auto;
+        padding: 0;
+        margin: 0 auto 14px;
+    }
+    .follow-list .follow-list-item .fl-item-info.fl-description p {
+        text-align: center;
+    }
+    .follow-list .follow-list-item .fl-item-info.fl-reputation {
+        display: none;
+    }
+    .follow-list .follow-list-item .fl-item-info.fl-button {
+        padding: 0;
+    }
+    .follow-list .follow-list-item .fl-item-info.fl-button .button {
+        margin: 0 auto;
+    }
+}
+
+/*------------------
+    BADGE BOXES
+------------------*/
+
+.badge-boxes {
+    overflow: hidden;
+}
+
+.badge-boxes .sidebar-item {
+    margin-bottom: 26px;
+}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Topics of interest" %}{% endblock %}
+
+{% block content %}
+    
+	<!-- SECTION -->
+	<div class="section-wrap">
+		<div class="section">
+			<!-- CONTENT -->
+			<div class="service-list column4-wrap">
+                {% for topic in topics %}
+                <div class="service-item column">
+                    <div class="circle medium gradient"></div>
+                    <div class="circle white-cover"></div>
+                    <div class="circle dark">
+                        <span class="icon-puzzle"></span>
+                    </div>
+                    <h3><a href="{{ topic.get_absolute_url }}">{{ topic.title }}</a></h3>
+                    <p>{{ topic.description }}</p>
+                    {% if request.user in topic.users_likes.all %}
+                        <a href="{% url 'topics:unlike' topic.id %}" class="button mid primary like-btn">Liked</a>
+                    {% else %}
+                        <a href="{% url 'topics:like' topic.id %}" class="button mid dark">Like</a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+        	</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'footystory/js/like.js' %}"></script>
+{% endblock %} 

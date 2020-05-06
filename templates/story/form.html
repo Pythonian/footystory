@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block title %}{% if create %}{% trans 'Create' %}{% else %}{% trans 'Edit your' %}{% endif %} {% trans 'story' %}{% endblock %}
+
+{% block content %}
+
+<div class="section-wrap">
+	<div class="section">
+
+		<div class="headline primary">
+            <h4>{% if create %}{% trans 'Hey' %} {{ user }}, {% trans 'tell your story!' %}{% else %}{% trans 'You can edit your story below!' %}{% endif %}</h4>
+        </div>
+        
+        <div class="form-box-item">
+			<form method="post" action="" enctype="multipart/form-data">
+				{% csrf_token %}
+
+				{% for hidden in form.hidden_fields %}
+		            {{ hidden }}
+		        {% endfor %}
+
+		        {% for errors in form.non_field_errors %}
+		            <div class="alert alert-danger" role="alert">{{ errors }}</div>
+		        {% endfor %}
+
+		        <div class="form-group">
+			    	<label for="{{ form.title.id_for_label }}" class="col-form-label {% if form.title.errors %}invalid{% endif %}">{% trans 'Your title' %}</label>
+
+			      	<input type="text" class="form-control {% if form.title.errors %}invalid{% endif %}" name="{{ form.title.name }}" id="{{ form.title.id_for_label }}" {% if form.title.value != None %}value="{{ form.title.value|stringformat:'s' }}"{% endif %} maxlength="{{ form.title.field.max_length }}" placeholder="{% trans 'Enter a descriptive title for your story' %}" {% if form.title.field.required %}required{% endif %} />
+
+			      	{% for error in form.title.errors %}
+				    	<p class="error">{{ error }}</p>
+				    {% endfor %}
+
+				    {% if form.title.help_text %}
+				    	<small class="form-text text-muted">{{ form.title.help_text }}</small>
+				    {% endif %}
+			    </div>
+
+			    <div class="form-group">
+				    <label for="{{ form.image.id_for_label }}" class="rl-label col-form-label {% if form.image.errors %}invalid{% endif %}">{% trans 'Image (Optional)' %}</label>
+				    
+				    <input type="file" id="{{ form.image.id_for_label }}" name="{{ form.image.name }}" class="form-control-file {% if form.image.errors %}invalid{% endif %}">
+				    
+				    {% if form.image.url %}
+						<!-- <div class="profile-image">
+							<div class="profile-image-data">
+								<figure class="user-avatar medium">
+									<img src="{{ user.profile.avatar.url }}">
+								</figure>
+
+								<p class="text-header">Current Avatar</p>
+								<p class="upload-details">70px * 70px</p>
+							</div>
+						</div> -->
+						<div class="form-check">
+							<input id="image-clear_id" name="image-clear" type="checkbox" class="form-check-input" /> 
+							<label for="image-clear_id" class="form-check-label">Remove image</label>
+						</div>
+					{% endif %}
+
+					{% for error in form.image.errors %}
+					    <p class="error">{{ error }}</p>
+					{% endfor %}
+
+					{% if form.image.help_text %}
+				    	<small class="form-text text-muted">{{ form.image.help_text }}</small>
+				    {% endif %}
+				</div>
+
+				<div class="form-group">
+				    <label for="{{ form.body.id_for_label }}" class="col-form-label {% if form.body.errors %}invalid{% endif %}">{% trans 'Your Story' %}</label>
+				    
+				    <textarea class="form-control {% if form.body.errors %}invalid{% endif %}" id="{{ form.body.id_for_label }}" name="{{ form.body.name }}" rows="10" cols="{{ form.body.field.cols }}" placeholder="{% trans 'Share your story' %}" {% if form.body.field.required %}required{% endif %}>{% if form.body.value != None %}{{ form.body.value|stringformat:'s' }}{% endif %}</textarea>
+
+				    {% for error in form.body.errors %}
+					    <p class="error">{{ error }}</p>
+					{% endfor %}
+					
+					{% if form.body.help_text %}
+				    	<small class="form-text text-muted">{{ form.body.help_text }}</small>
+				    {% endif %}
+				</div>
+
+		        <div class="form-group">
+			    	<label for="{{ form.tags.id_for_label }}" class="col-form-label {% if form.tags.errors %}invalid{% endif %}">{% trans 'Add Tags' %}</label>
+
+			      	<input type="text" class="form-control {% if form.tags.errors %}invalid{% endif %}" name="{{ form.tags.name }}" id="{{ form.tags.id_for_label }}" {% if form.tags.value != None %}value="{{ form.tags.value|stringformat:'s' }}"{% endif %} maxlength="{{ form.tags.field.max_length }}" placeholder="{% trans 'Add tags to describe your story' %}" {% if form.tags.field.required %}required{% endif %} />
+
+			      	{% for error in form.tags.errors %}
+				    	<p class="error">{{ error }}</p>
+				    {% endfor %}
+
+				    {% if form.tags.help_text %}
+				    	<small class="form-text text-muted">{{ form.tags.help_text }}</small>
+				    {% endif %}
+			    </div>
+
+				<div class="form-row">
+				    <div class="form-group col-md-6">
+				    	<label for="{{ form.topic.id_for_label }}" class="col-form-label {% if form.topic.errors %}invalid{% endif %}">{% trans 'Pick a Topic (Optional)' %}</label>
+						{{ form.topic }}
+
+				      	<!-- <select id="{{ form.topic.id_for_label }}" class="form-control {% if form.topic.errors %}invalid{% endif %}" name="{{ form.topic.name }}"></select> -->
+
+				      	{% for error in form.topic.errors %}
+					    	<p class="error">{{ error }}</p>
+					    {% endfor %}
+
+					    {% if form.topic.help_text %}
+					    	<small class="form-text text-muted">{{ form.topic.help_text }}</small>
+					    {% endif %}
+				    </div>
+
+				    <div class="form-group col-md-6">
+				    	<label for="{{ form.status.id_for_label }}" class="col-form-label {% if form.status.errors %}invalid{% endif %}">{% trans 'Status' %}</label>
+
+				    	{% render_field form.status class="form-control" %}
+
+				      	{% for error in form.status.errors %}
+					    	<p class="error">{{ error }}</p>
+					    {% endfor %}
+
+					    {% if form.status.help_text %}
+					    	<small class="form-text text-muted">{{ form.status.help_text }}</small>
+					    {% endif %}
+				    </div>
+				</div>
+
+				<button class="button mid primary" type="submit">{% if create %}Publish{% else %}Edit{% endif %} your story</button>
+			</form>
+		</div>
+		<!-- /FORM BOX ITEM -->
+
+		<div class="clearfix"></div>
+	</div>
+</div>
+<!-- /SECTION -->
+
+
+{% endblock %}

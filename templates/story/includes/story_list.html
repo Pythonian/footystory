@@ -1,0 +1,100 @@
+{% load i18n %}
+{% load story_tags %}
+
+<div class="blog-post-preview-item column">
+
+	{% if story.image %}
+		<a href="{{ story.get_absolute_url }}">
+			<figure>
+				<img src="{{ story.image.url }}" alt="{{ story.title }}">
+			</figure>
+		</a>
+
+		{% if story.topic %}
+		<span class="pin topic">
+			<a href="{{ story.topic.get_absolute_url }}">{{ story.topic }}</a>
+		</span>
+		{% endif %}
+	{% endif %}
+
+	<div class="blog-post-preview-item-info">
+		
+		<div class="meta-line">
+			<p><span class="icon-clock"></span> {{ story.read_time }} min read</p>
+			<p><span class="icon-calendar"></span> {{ story.created|days_since }}</p>
+		</div>
+
+		<!-- <small class="text-muted">Recommended by Seyi Pythonian</small> -->
+
+		<p class="text-header mt-2">
+			<a href="{{ story.get_absolute_url }}">{{ story.title }}</a>
+		</p>
+
+		{% if not related_stories %}
+			<p class="description-preview mb-0">{{ story.get_summary }}</p>
+		{% endif %}
+
+		<a href="{{ story.get_absolute_url }}">
+			<small class="text-muted">{% trans "Read more" %}...</small>
+		</a>
+
+		{% if story.status == 'P' %}
+		
+			<hr class="line-separator">
+			
+			<div class="metadata">
+				{% if request.user.is_authenticated %}
+					
+					<div class="meta-item">
+						{% if not story.author == request.user %}
+							{% if request.user in story.users_favorites.all %}
+							<a href="{% url 'story:unfavorite' story.id %}" title="Unfavorite this" rel="nofollow">
+								<span class="fa fa-heart" style="color: #21bb9d;"></span>
+							</a>
+							{% else %}
+							<a href="{% url 'story:favorite' story.id %}" title="Favorite this" rel="nofollow">
+								<span class="fa fa-heart-o"></span>
+							</a>
+							{% endif %}	
+						{% endif %}	
+						{% if story.author == request.user %}
+							<span class="fa fa-heart-o"></span>
+						{% endif %}
+						<p>{{ story.favorites }}</p>
+					</div>
+					
+				{% endif %}
+
+				<div class="meta-item">
+					<a href="{{ story.get_absolute_url }}#comments">
+						<span class="icon-speech"></span>
+						<p>{{ story.comments.count }}</p>
+					</a>
+				</div>
+				
+				{% if request.user.is_authenticated %}
+					{% if not story.author == request.user %}
+					<div class="meta-item">
+						{% if request.user in story.users_bookmarks.all %}
+						<a href="{% url 'story:delete_bookmark' story.id %}" title="Remove bookmark" rel="nofollow">
+							<span class="fa fa-bookmark" style="color: #21bb9d;"></span>
+						</a>
+						{% else %}
+						<a href="{% url 'story:add_bookmark' story.id %}" title="Bookmark this" rel="nofollow">
+							<span class="fa fa-bookmark-o"></span>
+						</a>
+						{% endif %}
+					</div>
+					{% endif %}
+				{% endif %}
+
+			</div>
+
+			<a href="{{ story.author.get_absolute_url }}" class="more-button primary">
+				<span class="icon-user mr-1"></span> {{ story.author.profile.get_screen_name }}
+			</a>
+
+		{% endif %}
+
+	</div>
+</div>

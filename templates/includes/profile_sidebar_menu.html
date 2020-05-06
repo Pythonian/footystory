@@ -1,0 +1,47 @@
+{% load accounts_tags %}
+{% load story_tags %}
+{% load static %}
+
+<div class="sidebar left author-profile">
+
+	<div class="sidebar-item author-bio">
+		<div class="user-avatar-wrap medium">
+			<figure class="user-avatar medium">
+				<img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'footystory/images/avatar.png' %}{% endif %}" alt="">
+			</figure>
+		</div>
+		<!-- /USER AVATAR -->
+		<p class="text-header">{{ user.profile.get_screen_name }}</p>
+		<p class="text-oneline">{% if user.profile.about %}{{ user.profile.about }}{% else %}Joined Footystory since <span class="primary">{{ user.date_joined|date:"F Y" }}</span> and a fan of <span class="primary">{{ user.profile.favorite_club }}</span>{% endif %}</p>
+		{% if request.user.is_authenticated %}
+			{% if request.user == user %}
+				<a href="{% url 'settings' user.username %}" class="button mid dark-light">Edit Profile</a>
+			{% else %}
+				{% if is_following %}
+					<a href="{% url 'unfollow' user.username %}" class="button mid primary follow-btn">Following</a>
+				{% else %}
+					<a href="{% url 'follow' user.username %}" class="button mid dark spaced"><span class="primary">Follow</span></a>
+				{% endif %}
+			{% endif %}
+		{% endif %}
+	</div>
+
+	<ul class="dropdown hover-effect">
+		<li class="dropdown-item {% if page == 'profile' %}active{% endif %}">
+			<a href="{{ user.get_absolute_url }}">Profile</a>
+		</li>
+		<li class="dropdown-item {% if page == 'list' %}active{% endif %}">
+			<a href="{% url 'story:list' user.username %}">Stories</a>
+			<span class="pin soft-edged big primary">{% get_total_published_stories user=user %}</span>
+		</li>
+		<li class="dropdown-item {% if page == 'followers' %}active{% endif %}">
+			<a href="{% url 'followers' user.username %}">Followers</a>
+			<span class="pin soft-edged big primary">{% get_followers_count username=user.username %}</span>
+		</li>
+		<li class="dropdown-item {% if page == 'following' %}active{% endif %}">
+			<a href="{% url 'following' user.username %}">Following</a>
+			<span class="pin soft-edged big primary">{% get_following_count username=user.username %}</span>
+		</li>
+	</ul>
+
+</div>

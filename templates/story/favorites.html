@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load story_tags %}
+
+{% block title %}{% trans "Favorites" %} &#8212; {{ request.user.profile.get_screen_name }}{% endblock %}
+
+{% block content %}
+
+	{% include 'includes/profile_banner_meta.html' %}
+
+	<div class="section-wrap">
+		<div class="section overflowable">
+			
+			{% include 'includes/profile_sidebar_menu.html' %}
+
+			<div class="content right">
+				<div class="headline buttons primary">
+					<h4>{% trans "Stories I recommend" %}</h4>
+				</div>
+				
+				<div class="blog-post-preview v1 column-wrap">
+					{% for story in stories %}
+						{% include 'story/includes/story_list.html' %}
+					{% endfor %}
+				</div>
+
+				<div class="clearfix"></div>
+
+			</div>
+
+			<div class="clearfix"></div>
+		</div>
+	</div>
+
+{% endblock %} 

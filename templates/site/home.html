@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+    {% if not request.user.is_authenticated %}
+	<!-- HT BANNER WRAP -->
+    <div class="ht-banner-wrap">
+        <!-- HT BANNER -->
+        <div class="ht-banner void violet">
+            <figure class="ht-banner-img1">
+                <img src="{% static 'footystory/images/how_to_shop_01.png' %}" alt="">
+            </figure>
+        </div>
+        <!-- /HT BANNER -->
+
+        <!-- HT BANNER -->
+        <div class="ht-banner">
+            <!-- HT BANNER CONTENT -->
+            <div class="ht-banner-content">
+                <p class="text-header">Welcome To Footystory!</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor unt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in der henderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <a href="" class="button mid dark">Share your <span class="primary">story</span></a>
+            </div>
+            <!-- /HT BANNER CONTENT -->
+        </div>
+        <!-- /HT BANNER -->
+	</div>
+	
+	<div class="clearfix"></div>
+
+    {% endif %}
+
+    <div class="section-wrap">
+        <div class="section">
+            
+            <div class="blog-post-preview v1 column3-wrap">
+                {% for story in stories %}
+                    {% include 'story/includes/story_list.html' %}
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+    	
+    {% if request.user.is_authenticated %}
+    <!-- CATEGORY NAV -->
+    <div class="category-nav-wrap">
+        <div class="category-nav primary">
+            <div class="category-tabs">
+                <div class="category-tab">
+                    <p>From Topics</p>
+                </div>
+
+                <div class="category-tab">
+                    <p>Following</p>
+                </div>
+
+                <div class="category-tab">
+                    <p>Recommends</p>
+                </div>
+            </div>
+
+            <!-- SLIDE CONTROLS -->
+            <div class="slide-control-wrap primary">
+                <div class="slide-control left">
+                    <!-- SVG ARROW -->
+                    <svg class="svg-arrow">
+                        <use xlink:href="#svg-arrow"></use>
+                    </svg>
+                    <!-- /SVG ARROW -->
+                </div>
+
+                <div class="slide-control right">
+                    <!-- SVG ARROW -->
+                    <svg class="svg-arrow">
+                        <use xlink:href="#svg-arrow"></use>
+                    </svg>
+                    <!-- /SVG ARROW -->
+                </div>
+            </div>
+            <!-- /SLIDE CONTROLS -->
+        </div>
+    </div>
+    <!-- /CATEGORY NAV -->
+
+    <!-- USER FEEDS -->
+    <div id="product-sideshow-wrap">
+        <div id="product-sideshow">
+
+            <div class="product-showcase tabbed">
+                <div class="blog-post-preview v1 column3-wrap">
+                    {% for story in user_topics_stories %}
+                        {% include 'story/includes/story_list.html' %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="product-showcase tabbed">
+                <div class="blog-post-preview v1 column3-wrap">
+                    {% for story in following_stories %}
+                        {% include 'story/includes/story_list.html' %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="product-showcase tabbed">
+                <div class="blog-post-preview v1 column3-wrap">
+                    {% for story in recommended_stories %}
+                        {% include 'story/includes/story_list.html' %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- <a href="#" class="button big dark"><span>Load More</span> Products</a> -->
+        </div>
+    </div>
+    <!-- / USER FEEDS -->
+    {% endif %}
+
+    <!-- SUBSCRIBE BANNER -->
+    <!-- <div id="subscribe-banner-wrap">
+        <div id="subscribe-banner">
+            <div class="subscribe-content">
+                <div class="subscribe-header">
+                    <figure>
+                        <img src="{% static 'footystory/images/news_icon.png' %}" alt="subscribe-icon">
+                    </figure>
+                    <p class="subscribe-title">Subscribe to our Newsletter</p>
+                    <p>And receive the top stories tailored for you.</p>
+                </div>
+                <form class="subscribe-form">
+                    <input type="text" name="subscribe_email" id="subscribe_email" placeholder="Enter your email here...">
+                    <button class="button medium dark">Subscribe!</button>
+                </form>
+            </div>
+        </div>
+    </div> -->
+    <!-- /SUBSCRIBE BANNER -->
+
+    <!-- SECTION -->
+    <div class="section-wrap">
+        <div class="section">
+            <!-- PRODUCT SHOWCASE -->
+            <div class="product-showcase">
+                <!-- HEADLINE -->
+                <div class="headline primary">
+                    <h4>Trending Topics</h4>
+                </div>
+                <!-- /HEADLINE -->
+
+                <div class="service-list column4-wrap">
+                    {% for topic in topics %}
+	                <!-- TOPIC -->
+	                <div class="service-item column">
+	                    <div class="circle medium gradient"></div>
+	                    <div class="circle white-cover"></div>
+	                    <div class="circle dark">
+	                        <span class="icon-present"></span>
+	                    </div>
+	                    <h3><a href="{{ topic.get_absolute_url }}">{{ topic.title }}</a></h3>
+                        <p>{{ topic.description }}</p>
+                        {% if request.user.is_authenticated %}
+                            {% if request.user in topic.users_likes.all %}
+                                <a href="{% url 'topics:unlike' topic.id %}" class="button mid primary like-btn">Liked</a>
+                            {% else %}
+                                <a href="{% url 'topics:like' topic.id %}" class="button mid dark">Like</a>
+                            {% endif %}
+                        {% endif %}
+	                </div>
+	                <!-- / TOPIC -->
+                    {% endfor %}
+            	</div>
+
+                <div class="clearfix"></div>
+            </div>
+            <!-- /PRODUCT SHOWCASE -->
+        </div>
+    </div>
+    <!-- /SECTION -->
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'footystory/js/home-v2.js' %}"></script>
+<script src="{% static 'footystory/js/like.js' %}"></script>
+{% endblock %} 

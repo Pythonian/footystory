@@ -1,0 +1,10 @@
+{% load accounts_tags %}
+
+{% is_user_following request username=user.username %}
+{% if is_user_following %}
+	<a href="{% url 'unfollow' user.username %}" class="button mid primary follow-btn">Following</a>
+{% else %}
+	<a href="{% url 'follow' user.username %}" class="button mid dark spaced"><span class="primary">Follow</span></a>
+{% endif %}
+
+{# get_followers_count username=user.username #}

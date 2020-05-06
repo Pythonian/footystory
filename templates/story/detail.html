@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load widget_tweaks %}
+{% load story_tags %}
+
+{% block title %}{{ story.title }} &#8212; {{ request.user.profile.get_screen_name }}{% endblock %}
+
+{% block content %}
+
+{% with story.comments.count as total_comments %}
+
+<div class="section-wrap">
+	<div class="section">
+		<div class="content center">
+
+			<article class="post blog-post">
+
+				{% if story.image %}
+					<div class="post-image">
+						<figure>
+							<img src="{{ story.image.url }}" alt="{{ story.title }}"> 
+						</figure>
+					</div>
+				{% endif %}
+
+				<div class="post-content">
+					
+					<h2 class="text-header big">{{ story.title }}</h2>
+					
+					<div class="meta-line">
+						
+						{% if story.topic %}
+						<a href="{{ story.topic.get_absolute_url }}">
+							<p class="category primary">
+								<span class="icon-tag mr-1"></span>
+								{{ story.topic }}
+							</p>
+						</a>
+						{% endif %}
+						
+						<div class="metadata">
+
+							{% if story.author == request.user %}
+							<div class="meta-item">
+								<a href="{{ story.get_edit_url }}">
+									<span class="icon-pencil"></span>
+									<p>Edit</p>
+								</a>
+							</div>
+							<!-- <div class="meta-item">
+								<a href="{{ story.get_delete_url }}">
+									<span class="icon-trash"></span>
+									<p>Delete</p>
+								</a>
+							</div> -->
+							{% endif %}
+
+							<div class="meta-item">
+								<a href="#comments">
+									<span class="icon-speech"></span>
+									<p>{{ total_comments }}</p>
+								</a>
+							</div>
+
+							<div class="meta-item">
+								<span class="icon-eye"></span>
+								<p>{{ story.impressions }}</p>
+							</div>
+
+							{% if request.user.is_authenticated %}
+								
+								<div class="meta-item">
+									{% if not story.author == request.user %}
+										{% if request.user in story.users_favorites.all %}
+										<a href="{% url 'story:unfavorite' story.id %}" title="Unfavorite this" rel="nofollow">
+											<span class="fa fa-heart" style="color: #21bb9d;"></span>
+										</a>
+										{% else %}
+										<a href="{% url 'story:favorite' story.id %}" title="Favorite this" rel="nofollow">
+											<span class="fa fa-heart-o"></span>
+										</a>
+										{% endif %}	
+									{% endif %}	
+									{% if story.author == request.user %}
+										<span class="fa fa-heart-o"></span>
+									{% endif %}
+									<p>{{ story.favorites }}</p>
+								</div>
+
+								{% if not story.author == request.user %}
+									<div class="meta-item">
+										{% if request.user in story.users_bookmarks.all %}
+										<a href="{% url 'story:delete_bookmark' story.id %}" title="Remove bookmark" rel="nofollow">
+											<span class="fa fa-bookmark" style="color: #21bb9d;"></span>
+											<p>&nbsp;</p>
+										</a>
+										{% else %}
+										<a href="{% url 'story:add_bookmark' story.id %}" title="Bookmark this" rel="nofollow">
+											<span class="fa fa-bookmark-o"></span>
+											<p>&nbsp;</p>
+										</a>
+										{% endif %}
+									</div>
+								{% endif %}
+							{% endif %}
+
+						</div>
+
+						<p>
+							<span class="icon-calendar"></span>
+							{{ story.created|date:"F j, Y" }}
+						</p>
+					</div>
+
+					<!-- POST CONTENT -->
+					<div class="post-paragraph">
+						{{ story.body|linebreaks }}
+						
+						<!-- POST TAGS -->
+						{% if story.get_tags %}
+							<div class="tag-list primary">
+								{% for tag in story.get_tags %}
+									<a href="" class="tag-list-item">{{ tag.title }}</a>
+								{% endfor %}
+							</div>
+						{% endif %}
+						<!-- /POST TAGS -->
+					</div>
+					<!-- /POST CONTENT -->
+
+				</div>
+				<!-- /POST CONTENT -->
+
+				<hr class="line-separator">
+
+				<!-- SHARE -->
+				<div class="share-links-wrap">
+					<p class="text-header small">Share on</p>
+					<div class="tag-list primary">
+						<a href="#" class="tag-list-item"><span class="icon-social-facebook"></span></a>
+						<a href="#" class="tag-list-item"><span class="icon-social-twitter"></span></a>
+					</div>
+				</div>
+				<!-- /SHARE -->
+			</article>
+			<!-- /POST -->
+
+			{% if story.get_previous_by_created or story.get_next_by_created %}
+			<!-- PREVIOUS & NEXT STORY -->
+				<div class="blog-next-prev">
+					{% if story.get_previous_by_created %}
+						<div class="blog-prev">
+							<a href="{{ story.get_previous_story.get_absolute_url }}">
+								<p class="text-header">Previous Story</p>
+								<small class="text-muted">{{ story.get_previous_story.created|date:"M j, Y" }}</small>
+								<p>{{ story.get_previous_story }}</p>
+							</a>
+						</div>
+					{% endif %}
+					{% if story.get_next_by_created %}
+						<div class="blog-next">
+							<a href="{{ story.get_next_story.get_absolute_url }}">
+								<p class="text-header">Next Story</p>
+								<small class="text-muted">{{ story.get_next_story.created|date:"M j, Y" }}</small>
+								<p>{{ story.get_next_story }}</p>
+							</a>
+						</div>
+					{% endif %}
+					<div class="clearfix"></div>
+				</div>
+			<!-- / PREVIOUS & NEXT STORY -->
+			{% endif %}
+
+			<!-- BLOG AUTHOR -->
+			<div class="blog-author">
+				<a href="{{ story.author.get_absolute_url }}">
+					<figure class="user-avatar medium liquid">
+						<img src="{% if story.author.profile.avatar %}{{ story.author.profile.avatar.url }}{% else %}{% static 'footystory/images/avatar.png' %}{% endif %}" alt="{{ story.author.profile.get_screen_name }}">
+					</figure>
+				</a>
+
+				{% if request.user.is_authenticated %}
+					{% if not request.user == story.author %}
+						{% if is_following %}
+							<a href="{% url 'unfollow' user.username %}" class="button half primary follow-btn">Following</a>
+						{% else %}
+							<a href="{% url 'follow' user.username %}" class="button half dark-light spaced">Follow</a>
+						{% endif %}
+					{% endif %}
+				{% endif %}
+								
+				<p class="text-header">
+					<a href="{{ story.author.get_absolute_url }}">{{ story.author.profile.get_screen_name }}</a>
+				</p>
+				
+				<p class="timestamp">
+					{{ story.author.profile.favorite_club }}
+				</p>
+				
+				<p>
+					{% if story.author.profile.about %}
+						{{ story.author.profile.about }}
+					{% else %}
+						Joined Footystory since <span class="primary">{{ story.author.date_joined|date:"F Y" }}</span> and a fan of <span class="primary">{{ story.author.profile.favorite_club }}</span>
+					{% endif %}
+				</p>
+				
+			</div>
+			<!-- /BLOG AUTHOR -->
+
+			<!-- RELATED STORIES -->
+			<div class="blog-post-preview v1 column-wrap">
+				{% include 'story/includes/story_list.html' %}
+			</div>
+			<!-- / RELATED STORIES -->
+
+			<!-- BLOG COMMENTS -->
+			<div class="blog-comments">
+				<h4 class="section-title" id="comments">Comments ({{ total_comments }})</h4>
+
+				<hr class="line-separator">
+				
+				<!-- COMMENTS -->
+				<div class="comment-list">
+					{% for comment in comments %}
+						<div class="comment-wrap" id="comment-{{ comment.id }}">
+							<!-- USER AVATAR -->
+							<a href="{{ comment.name.get_absolute_url }}">
+								<figure class="user-avatar medium">
+									<img src="{% if comment.name.profile.avatar %}{{ comment.name.profile.avatar.url }}{% else %}{% static 'footystory/images/avatar.png' %}{% endif %}" alt="{{ comment.name.profile.get_screen_name }}">
+								</figure>
+							</a>
+							<!-- /USER AVATAR -->
+							<div class="comment">
+								<p class="text-header">
+									<a href="{{ comment.name.get_absolute_url }}">{{ comment.name.profile.get_screen_name }}</a>
+									<!-- <span class="pin">
+										<a href="">
+										<span class="icon-pencil"></span>
+										</a>
+									</span> -->
+								</p>
+								{% if comment.name == story.author %}
+									<span class="pin">Author</span>
+								{% endif %}
+								<p class="timestamp">{{ comment.created|date:"M j, Y" }}</p>
+								{% if request.user.is_authenticated %}
+									<a href="#" class="reply">Reply</a>
+								{% endif %}
+								<p>{{ comment.body|linebreaks }}</p>
+							</div>
+
+							{% if request.user.is_authenticated %}
+							<div class="comment-reply" style="display: none;">
+								<!-- COMMENT REPLY -->
+								<div class="comment-wrap comment-reply">
+									<!-- USER AVATAR -->
+									<a href="{{ request.user.get_absolute_url }}">
+										<figure class="user-avatar medium">
+											<img src="{% if request.user.profile.avatar %}{{ request.user.profile.avatar.url }}" alt="{{ request.user.profile.get_screen_name }}{% else %}{% static 'footystory/images/avatar.png' %}{% endif %}" alt="{{ request.user.profile.get_screen_name }}">
+										</figure>
+									</a>
+									<!-- /USER AVATAR -->
+
+									<!-- COMMENT REPLY FORM -->
+									<form class="comment-reply-form" method="post" action=""> {% csrf_token %}
+										{% render_field form.body class="form-control" rows='3' placeholder='Reply to this comment...' %}
+										<input type="hidden" name="parent_id" value="{{ comment.id }}">
+										<button type="submit" class="button secondary">Post Reply</button>
+									</form>
+									<!-- /COMMENT REPLY FORM -->
+								</div>
+								<!-- /COMMENT REPLY -->
+
+								{% for reply in comment.children %}
+									<div class="comment-wrap" id="comment-{{ comment.id }}">
+										<!-- USER AVATAR -->
+										<a href="{{ reply.name.get_absolute_url }}">
+											<figure class="user-avatar medium">
+												<img src="{% if reply.name.profile.avatar %}{{ reply.name.profile.avatar.url }}{% else %}{% static 'footystory/images/avatar.png' %}{% endif %}" alt="{{ reply.name.profile.get_screen_name }}">
+											</figure>
+										</a>
+										<!-- /USER AVATAR -->
+										<div class="comment">
+											<p class="text-header">
+												<a href="{{ reply.name.get_absolute_url }}">
+													{{ reply.name.profile.get_screen_name }}
+												</a>
+											</p>
+											{% if reply.name == story.author %}
+												<span class="pin">Author</span>
+											{% endif %}
+											<p class="timestamp">{{ reply.created|days_since }}</p>
+											<p>{{ reply.body|linebreaks }}</p>
+										</div>
+									</div>
+								{% endfor %}
+
+							</div>
+							{% endif %}
+
+						</div>
+						{% if not forloop.last %}
+							<hr class="line-separator">
+						{% endif %}
+					{% empty %}
+						<h3 class="text-muted">There are no comments on this story yet.</h3>
+					{% endfor %}
+
+					<!-- LINE SEPARATOR -->
+					<hr class="line-separator">
+					<!-- /LINE SEPARATOR -->
+
+					<h3>Leave a Comment</h3>
+
+					<!-- COMMENT REPLY -->
+					<div class="comment-wrap comment-reply">
+						{% if request.user.is_authenticated %}
+							<!-- USER AVATAR -->
+							<a href="{{ request.user.get_absolute_url }}">
+								<figure class="user-avatar medium">
+									<img src="{% if request.user.profile.avatar %}{{ request.user.profile.avatar.url }}{% else %}{% static 'footystory/images/avatar.png' %}{% endif %}" alt="{{ request.user.profile.get_screen_name }}">
+								</figure>
+							</a>
+							<!-- /USER AVATAR -->
+
+							<!-- COMMENT REPLY FORM -->
+							<form class="comment-reply-form" method="post" action=""> {% csrf_token %}
+								{% render_field form.body class="form-control" placeholder="Write your comment here..." rows='3' %}
+								<button class="button secondary" type="submit">Post Comment</button>
+							</form>
+							<!-- /COMMENT REPLY FORM -->
+						{% else %}
+							<p>Please <a class="primary" href="{% url 'login' %}">login</a> to leave a comment on this story.</p>			
+						{% endif %}
+					</div>
+					<!-- /COMMENT REPLY -->
+				</div>
+				<!-- /COMMENTS -->
+			</div>
+			<!-- /BLOG COMMENTS -->
+
+		<!-- /CONTENT -->
+	</div>
+</div>
+
+{% endwith %}
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'footystory/js/follow.js' %}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".reply").click(function(event){
+        event.preventDefault();
+        $(this).parent().next(".comment-reply").fadeToggle();
+    })
+})
+</script>
+{% endblock %}

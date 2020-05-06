@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load i18n %}
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+
+	<title>{% block title %}{% endblock %} ::: {% trans "FootyStory - Share Your Footy Experiences!" %}</title>
+
+    <link rel="stylesheet" href="{% static 'footystory/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'footystory/css/styles.css' %}?v=7">
+
+	{% block stylesheets %}{% endblock %}
+
+	<link rel="icon" href="">
+</head>
+<body>
+
+	<!-- HEADER -->
+	<div class="header-wrap">
+		<header>
+			<!-- LOGO -->
+			<!-- <div>
+				<a href="{% url 'home' %}">
+					<span class="s-logo">F</span>
+					<h1 class="title">Footystory</h1>
+				</a>
+			</div> -->
+			<!-- /LOGO -->
+
+			<!-- MOBILE MENU HANDLER -->
+			<div class="mobile-menu-handler primary left">
+				<img src="{% static 'footystory/images/pull-icon.png' %}" alt="pull-icon">
+			</div>
+			<!-- /MOBILE MENU HANDLER -->
+
+			<!-- LOGO MOBILE -->
+			<a href="{% url 'home' %}">
+				<!-- <figure class="logo-mobile">
+					<img src="{% static 'footystory/images/logo_mobile.png' %}" alt="logo-mobile">
+				</figure> -->
+				<!-- <span class="logo-mobile">F</span> -->
+			</a>
+			<!-- /LOGO MOBILE -->
+
+			<!-- MOBILE ACCOUNT OPTIONS HANDLER -->
+			<div class="mobile-account-options-handler right secondary">
+				<span class="icon-user"></span>
+			</div>
+			<!-- /MOBILE ACCOUNT OPTIONS HANDLER -->
+
+			{% if not request.user.is_authenticated %}
+			<!-- USER BOARD -->
+			<div class="user-board">
+				<!-- ACCOUNT ACTIONS -->
+				<div class="account-actions no-space">
+					<!-- <a href="" class="interesting-link">Help &amp; Support</a> -->
+					<a href="{% url 'signup' %}" class="button primary">Sign up</a>
+					<a href="{% url 'login' %}" class="button secondary">Login</a>
+				</div>
+				<!-- /ACCOUNT ACTIONS -->
+			</div>
+			<!-- /USER BOARD -->
+			{% else %}
+			<!-- USER BOARD -->
+			<div class="user-board">
+				<!-- USER QUICKVIEW -->
+				<div class="user-quickview">
+					<!-- USER AVATAR -->
+					<a href="{{ request.user.get_absolute_url }}">
+					<div class="outer-ring">
+						<div class="inner-ring"></div>
+						<figure class="user-avatar">
+							<img src="{% if request.user.profile.avatar %}{{ request.user.profile.avatar.url }}{% else %}{% static 'footystory/images/avatar.png' %}{% endif %}" alt="{{ request.user.profile.get_screen_name }}">
+						</figure>
+					</div>
+					</a>
+					<!-- /USER AVATAR -->
+
+					<!-- USER INFORMATION -->
+					<p class="user-name">{{ request.user.profile.get_screen_name }}</p>
+					<!-- SVG ARROW -->
+					<svg class="svg-arrow">
+						<use xlink:href="#svg-arrow"></use>
+					</svg>
+					<!-- /SVG ARROW -->
+					<p class="user-club">{{ request.user.profile.favorite_club }}</p>
+					<!-- /USER INFORMATION -->
+
+					<!-- USER INFORMATION DROPDOWN -->
+					<ul class="dropdown small hover-effect closed">
+						<li class="dropdown-item">
+							<div class="dropdown-triangle"></div>
+							<a href="{{ request.user.get_absolute_url }}">
+								<span class="sl-icon icon-user"></span>
+								Profile
+							</a>
+						</li>
+						<li class="dropdown-item">
+							<a href="{% url 'story:list' request.user.username %}">
+								<span class="sl-icon icon-book-open"></span>
+								Stories
+							</a>
+						</li>
+						<li class="dropdown-item">
+							<a href="{% url 'story:drafts' request.user.username %}">
+								<span class="sl-icon icon-folder-alt"></span>
+								Drafts
+							</a>
+						</li>
+						<li class="dropdown-item">
+							<a href="{% url 'story:bookmarks' request.user.username %}">
+								<i class="sl-icon fa fa-bookmark-o"></i>
+								Bookmarks
+							</a>
+						</li>
+						<li class="dropdown-item">
+							<a href="{% url 'story:favorites' request.user.username %}">
+								<span class="sl-icon icon-heart"></span>
+								Favorites
+							</a>
+						</li>
+						<li class="dropdown-item">
+							<a href="{% url 'settings' request.user.username %}">
+								<span class="sl-icon icon-settings"></span>
+								Settings
+							</a>
+						</li>
+						<li class="dropdown-item">
+							<a href="{% url 'logout' %}">
+								<span class="sl-icon icon-logout"></span>
+								Sign out
+							</a>
+						</li>
+					</ul>
+					<!-- /DROPDOWN -->
+				</div>
+				<!-- /USER QUICKVIEW -->
+
+				<!-- ACCOUNT NOTIFICATIONS -->
+				<div class="account-information">
+					<div class="account-email-quickview">
+						<span class="icon-bell">
+							<svg class="svg-arrow">
+								<use xlink:href="#svg-arrow"></use>
+							</svg>
+						</span>
+
+
+						<span class="pin soft-edged primary">4</span>
+
+						<ul class="dropdown notifications no-hover closed">
+							<li class="dropdown-item">
+								<div class="dropdown-triangle"></div>
+                                <a href="" class="link-to"></a>
+                                <figure class="user-avatar">
+                                    <img src="{% static 'footystory/images/avatar_02.jpg' %}" alt="">
+                                </figure>
+                                <p class="title"><span>Seyi Pythonian</span> commented on your story.</p>
+                                <p class="timestamp">10 mins ago.</p>
+                                <span class="notification-type primary-new icon-speech"></span>
+
+                            </li>
+                            <li class="dropdown-item">
+								<a href="{% url 'notifications' request.user.username %}" class="button primary">View all Notifications</a>
+                            </li>
+						</ul>
+
+					</div>
+				</div>
+				<!-- ACCOUNT INFORMATION -->
+
+				<!-- ACCOUNT ACTIONS -->
+				<div class="account-actions">
+					<!-- <a href="" class="interesting-link">Help</a> -->
+					<a href="{% url 'story:create' %}" class="button primary">New story</a>
+				</div>
+				<!-- /ACCOUNT ACTIONS -->
+			</div>
+			<!-- /USER BOARD -->
+			{% endif %}
+
+		</header>
+	</div>
+	<!-- /HEADER -->
+
+	<!-- SIDE MENU MOBILE -->
+	<div id="mobile-menu" class="side-menu left closed">
+		<!-- SVG PLUS -->
+		<svg class="svg-plus">
+			<use xlink:href="#svg-plus"></use>
+		</svg>
+		<!-- /SVG PLUS -->
+
+		<!-- SIDE MENU HEADER -->
+		<div class="side-menu-header">
+			<figure class="logo small">
+				<img src="{% static 'footystory/images/logo.png' %}" alt="logo">
+			</figure>
+		</div>
+		<!-- /SIDE MENU HEADER -->
+
+		<!-- SIDE MENU TITLE -->
+		<p class="side-menu-title">Navigation</p>
+		<!-- /SIDE MENU TITLE -->
+
+		<!-- DROPDOWN -->
+		<ul class="dropdown dark hover-effect interactive">
+			<!-- DROPDOWN ITEM -->
+			<li class="dropdown-item active">
+				<a href="{% url 'home' %}">
+					<span class="sl-icon icon-home"></span>
+					Home
+				</a>
+			</li>
+			<!-- /DROPDOWN ITEM -->
+
+			<!-- DROPDOWN ITEM -->
+			<li class="dropdown-item">
+				<a href="{% url 'stories' %}">
+					<span class="sl-icon icon-book-open"></span>
+					Your Stories
+				</a>
+			</li>
+			<!-- /DROPDOWN ITEM -->
+
+			<!-- DROPDOWN ITEM -->
+			<li class="dropdown-item">
+				<a href="{% url 'people' %}">
+					<span class="sl-icon icon-people"></span>
+					Discover People
+				</a>
+			</li>
+			<!-- /DROPDOWN ITEM -->
+
+			<!-- DROPDOWN ITEM -->
+			<li class="dropdown-item">
+				<a href="{% url 'topics:list' %}">
+					<span class="sl-icon icon-puzzle"></span>
+					Explore Topics
+				</a>
+			</li>
+			<!-- /DROPDOWN ITEM -->
+
+		</ul>
+		<!-- /DROPDOWN -->
+	</div>
+	<!-- /SIDE MENU -->
+
+	<!-- SIDE MENU MOBILE -->
+	<div id="account-options-menu" class="side-menu right closed">
+		<!-- SVG PLUS -->
+		<svg class="svg-plus">
+			<use xlink:href="#svg-plus"></use>
+		</svg>
+		<!-- /SVG PLUS -->
+
+		<!-- SIDE MENU HEADER -->
+		<div class="side-menu-header">
+			<!-- USER QUICKVIEW -->
+			<div class="user-quickview">
+				<!-- USER AVATAR -->
+				<a href="{{ request.profile.get_absolute_url }}">
+				<div class="outer-ring">
+					<div class="inner-ring"></div>
+					<figure class="user-avatar">
+						<img src="{% if request.user.profile.avatar %}{{ request.user.profile.avatar.url }}{% else %}{% static 'footystory/images/avatar.png' %}{% endif %}" alt="{{ request.user.profile.get_screen_name }}">
+					</figure>
+				</div>
+				</a>
+				<!-- /USER AVATAR -->
+
+				<!-- USER INFORMATION -->
+				<p class="user-name">{{ request.user.profile.get_screen_name }}</p>
+				<p class="user-money">{{ request.user.profile.favorite_club }}</p>
+				<!-- /USER INFORMATION -->
+			</div>
+			<!-- /USER QUICKVIEW -->
+		</div>
+		<!-- /SIDE MENU HEADER -->
+
+		<!-- SIDE MENU TITLE -->
+		<!-- <p class="side-menu-title">Your Account</p> -->
+		<!-- /SIDE MENU TITLE -->
+		{% if request.user.is_authenticated %}
+		<!-- DROPDOWN -->
+		<ul class="dropdown dark hover-effect">
+			<li class="dropdown-item 1active">
+				<a href="{% url 'notifications' request.user.username %}">
+					<span class="sl-icon icon-bell"></span>
+					Notifications
+				</a>
+				<!-- PIN -->
+                <!-- <span class="pin soft-edged big primary">0</span> -->
+                <!-- /PIN -->
+			</li>
+		</ul>
+		<!-- /DROPDOWN -->
+
+		<!-- SIDE MENU TITLE -->
+		<p class="side-menu-title">Links</p>
+		<!-- /SIDE MENU TITLE -->
+
+		<!-- DROPDOWN -->
+		<ul class="dropdown dark hover-effect">
+
+			<!-- DROPDOWN ITEM -->
+			<li class="dropdown-item">
+				<a href="{{ request.profile.get_absolute_url }}">Profile</a>
+			</li>
+			<!-- /DROPDOWN ITEM -->
+
+			<!-- DROPDOWN ITEM -->
+			<li class="dropdown-item">
+				<a href="{% url 'settings' user.username %}">Settings</a>
+			</li>
+			<!-- /DROPDOWN ITEM -->
+
+			<!-- DROPDOWN ITEM -->
+			<li class="dropdown-item">
+				<a href="{% url 'story:list' user.username %}">My Stories</a>
+			</li>
+			<!-- /DROPDOWN ITEM -->
+
+			<!-- DROPDOWN ITEM -->
+			<li class="dropdown-item">
+				<a href="{% url 'story:drafts' request.user.username %}">Drafts</a>
+			</li>
+			<!-- /DROPDOWN ITEM -->
+
+			<!-- DROPDOWN ITEM -->
+			<li class="dropdown-item">
+				<a href="{% url 'story:bookmarks' request.user.username %}">My Bookmarks</a>
+			</li>
+			<!-- /DROPDOWN ITEM -->
+
+			<!-- DROPDOWN ITEM -->
+			<li class="dropdown-item">
+				<a href="{% url 'followers' request.user.username %}">Followers</a>
+			</li>
+			<!-- /DROPDOWN ITEM -->
+
+			<!-- DROPDOWN ITEM -->
+			<li class="dropdown-item">
+				<a href="{% url 'following' request.user.username %}">Following</a>
+			</li>
+			<!-- /DROPDOWN ITEM -->
+		{% endif %}
+		</ul>
+		<!-- /DROPDOWN -->
+
+		<a href="{% url 'logout' %}" class="button medium secondary">Sign out</a>
+		<!-- <a href="#" class="button medium primary">Become a Seller</a> -->
+	</div>
+	<!-- /SIDE MENU -->
+
+	<!-- MAIN DESKTOP MENU -->
+	<div class="main-menu-wrap">
+		<div class="menu-bar">
+			<nav>
+				<ul class="main-menu">
+					<!-- MENU ITEM -->
+					<li class="menu-item">
+						<a href="{% url 'home' %}">Home</a>
+					</li>
+					<!-- /MENU ITEM -->
+
+					<!-- MENU ITEM -->
+					<li class="menu-item">
+						<a href="{% url 'stories' %}">Your Stories</a>
+					</li>
+					<!-- /MENU ITEM -->
+
+					<!-- MENU ITEM -->
+					<li class="menu-item">
+						<a href="{% url 'people' %}">Discover People</a>
+					</li>
+					<!-- /MENU ITEM -->
+
+					<!-- MENU ITEM -->
+					<li class="menu-item">
+						<a href="{% url 'topics:list' %}">Explore Topics</a>
+					</li>
+					<!-- /MENU ITEM -->
+
+				</ul>
+			</nav>
+			<!-- <form class="search-form" method="GET" action="">
+				<input type="text" class="rounded" name="search" id="search_products" placeholder="Search footystory..." value="{{ request.GET.q }}">
+				<input type="image" src="{% static 'footystory/images/search-icon.png' %}" alt="search-icon">
+			</form> -->
+		</div>
+	</div>
+	<!-- /MAIN MENU -->
+
+	{% block content %}
+    {% endblock %}
+
+	<!-- FOOTER -->
+	<footer>
+		<!-- FOOTER BOTTOM -->
+		<div id="footer-bottom-wrap">
+			<div id="footer-bottom">
+				<p><span>&copy;</span><a href="{% url 'home' %}">Footystory</a> - All Rights Reserved {% now "Y" %}</p>
+			</div>
+		</div>
+		<!-- /FOOTER BOTTOM -->
+	</footer>
+	<!-- /FOOTER -->
+
+	<div class="shadow-film closed"></div>
+
+	<!-- SVG ARROW -->
+	<svg style="display: none;">
+		<symbol id="svg-arrow" viewBox="0 0 3.923 6.64014" preserveAspectRatio="xMinYMin meet">
+			<path d="M3.711,2.92L0.994,0.202c-0.215-0.213-0.562-0.213-0.776,0c-0.215,0.215-0.215,0.562,0,0.777l2.329,2.329
+				L0.217,5.638c-0.215,0.215-0.214,0.562,0,0.776c0.214,0.214,0.562,0.215,0.776,0l2.717-2.718C3.925,3.482,3.925,3.135,3.711,2.92z"/>
+		</symbol>
+	</svg>
+	<!-- /SVG ARROW -->
+
+	<!-- SVG STAR -->
+	<svg style="display: none;">
+		<symbol id="svg-star" viewBox="0 0 10 10" preserveAspectRatio="xMinYMin meet">
+			<polygon points="4.994,0.249 6.538,3.376 9.99,3.878 7.492,6.313 8.082,9.751 4.994,8.129 1.907,9.751
+		2.495,6.313 -0.002,3.878 3.45,3.376 "/>
+		</symbol>
+	</svg>
+	<!-- /SVG STAR -->
+
+	<!-- SVG PLUS -->
+	<svg style="display: none;">
+		<symbol id="svg-plus" viewBox="0 0 13 13" preserveAspectRatio="xMinYMin meet">
+			<rect x="5" width="3" height="13"/>
+			<rect y="5" width="13" height="3"/>
+		</symbol>
+	</svg>
+	<!-- /SVG PLUS -->
+
+	<!-- jQuery -->
+	<script src="{% static 'footystory/js/jquery-3.1.0.js' %}"></script>
+	<!-- Side Menu -->
+	<script src="{% static 'footystory/js/side-menu.js' %}"></script>
+	<!-- User Quickview Dropdown -->
+	<script src="{% static 'footystory/js/user-board.js' %}"></script>
+	{% block scripts %}{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<div class="author-profile-banner"></div>
+<div class="author-profile-meta-wrap">
+	<div class="author-profile-meta">
+		<!-- AUTHOR PROFILE INFO -->
+		<div class="author-profile-info">
+			<!-- AUTHOR PROFILE INFO ITEM -->
+			<div class="author-profile-info-item">
+				<p class="text-header">Member Since:</p>
+				<p>{{ user.date_joined|date:"F Y" }}</p>
+			</div>
+			<!-- /AUTHOR PROFILE INFO ITEM -->
+
+			<!-- AUTHOR PROFILE INFO ITEM -->
+			<div class="author-profile-info-item">
+				<p class="text-header">Football Club:</p>
+				<p>{{ user.profile.favorite_club }}</p>
+			</div>
+			<!-- /AUTHOR PROFILE INFO ITEM -->
+
+			{% if user.profile.location %}
+			<!-- AUTHOR PROFILE INFO ITEM -->
+			<div class="author-profile-info-item">
+				<p class="text-header">Location:</p>
+				<p>
+					{{ user.profile.location }}
+				</p>
+			</div>
+			<!-- /AUTHOR PROFILE INFO ITEM -->
+			{% endif %}
+
+			{% if user.profile.website %}
+			<!-- AUTHOR PROFILE INFO ITEM -->
+			<div class="author-profile-info-item">
+				<p class="text-header">Website:</p>
+				<p>
+					<a href="{{ user.profile.website }}" class="primary" target="_blank">{{ user.profile.website }}</a>
+				</p>
+			</div>
+			<!-- /AUTHOR PROFILE INFO ITEM -->
+			{% endif %}
+		</div>
+		<!-- /AUTHOR PROFILE INFO -->
+	</div>
+</div>

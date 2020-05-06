@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Discover writers on Footystory" %}{% endblock %}
+
+{% block content %}
+    
+	<!-- SECTION -->
+	<div class="section-wrap">
+		<div class="section">
+			<!-- CONTENT -->
+			<div class="grid column4-wrap">
+				<!-- BADGE BOXES -->
+				<div class="badge-boxes">
+					{% for user in users %}
+					<div class="sidebar-item author-bio author-badges-v2 column">
+						<!-- USER AVATAR -->
+						<a href="{{ user.get_absolute_url }}" class="user-avatar-wrap medium">
+							<figure class="user-avatar medium">
+								<img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'footystory/images/avatar.png' %}{% endif %}" alt="{{ user.profile.get_screen_name }}">
+							</figure>
+						</a>
+						<!-- /USER AVATAR -->
+						<p class="text-header">{{ user.profile.get_screen_name }}</p>
+						<p class="text-oneline">{{ user.profile.get_about|safe }}</p>
+						<a href="{{ user.get_absolute_url }}" class="button mid dark spaced">View <span class="primary">Profile</span></a>
+						{% if request.user.is_authenticated %}
+							{% if user != request.user %}
+								{% if user in request.user.profile.get_following %}
+									<a href="{% url 'unfollow' user.username %}" class="button mid primary follow-btn spaced">Following</a>
+								{% else %}
+									<a href="{% url 'follow' user.username %}" class="button mid dark-light spaced"><span class="primary">Follow</span></a>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+						<!-- <a href="#" class="button mid primary half block-btn"><span class="icon-shield"></span></a>
+						<a href="#" class="button mid primary half"><span class="icon-flag"></span></a>
+						<div class="clearfix"></div> -->
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block scripts %}
+<!-- <script src="{% static 'footystory/js/block.js' %}"></script> -->
+<script src="{% static 'footystory/js/follow.js' %}"></script>
+{% endblock %} 

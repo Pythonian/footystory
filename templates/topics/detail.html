@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Explore" %} {{ topic.title }}{% endblock %}
+
+{% block content %}
+	<div class="section-headline-wrap v2">
+		<div class="section-headline">
+			<h2>{{ topic.title }}</h2>
+			<p class="mt-4 pt-1">
+				{% if request.user in topic.users_likes.all %}
+	                <a href="{% url 'topics:unlike' topic.id %}" class="button mid like-btn">Liked</a>
+	            {% else %}
+	                <a href="{% url 'topics:like' topic.id %}" class="button mid dark">Like</a>
+	            {% endif %}
+	        </p>
+			<!-- <p class=" mt-4 pt-1"><a href="" class="button mid spaced dark">Follow</a></p> -->
+		</div>
+	</div>
+
+	<div class="section-wrap">
+		<div class="section">
+			
+			<div class="blog-post-preview v1 column3-wrap">
+				{% for story in stories %}
+					{% include 'story/includes/story_list.html' %}
+				{% endfor %}
+			</div>
+
+		</div>
+	</div>
+
+{% endblock %} 
+
+{% block scripts %}
+<script src="{% static 'footystory/js/like.js' %}"></script>
+{% endblock %} 

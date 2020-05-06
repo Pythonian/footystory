@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Delete your Account" %}{% endblock %}
+
+{% block content %}
+
+<div class="form-block">
+
+	<div class="form-block-headline primary">
+        <h2>{% trans "Delete your Account?" %}</h2>
+    </div>
+
+	<div class="form-block-content">
+
+        <p class="highlighted spaced">{% trans "Are you sure you want to delete your account on Footystory?" %}</p>
+        <p class="highlighted spaced">{% trans "Once you delete your account, there is no going back." %}</p>
+        <p class="highlighted">{% trans "Please be certain." %}</p>
+
+		<!-- <hr class="line-separator"> -->
+	    
+        <form method="post" action="">
+            {% csrf_token %}
+
+            <button class="button mid tertiary" type="submit">{% trans "Delete Account" %}</button>
+
+        </form>
+
+	</div>
+</div>
+
+{% endblock %}

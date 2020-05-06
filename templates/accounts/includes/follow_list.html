@@ -1,0 +1,23 @@
+{% load static %}
+<div class="follow-list-item">
+	<a href="{{ follow_user.get_absolute_url }}">
+		<figure class="user-avatar medium liquid">
+			<img src="{% if follow_user.profile.avatar %}{{ follow_user.profile.avatar.url }}{% else %}{% static 'footystory/images/avatar.png' %}{% endif %}" alt="{{ follow_user.profile.get_screen_name }}">
+		</figure>
+	</a>
+	<div class="fl-item-info fl-description">
+		<p class="text-header"><a href="{{ follow_user.get_absolute_url }}">{{ follow_user.profile.get_screen_name }}</a></p>
+		<p>{% if follow_user.profile.about %}{{ follow_user.profile.about }}{% else %}Joined Footystory since <span class="primary">{{ user.date_joined|date:"F Y" }}</span> and a fan of <span class="primary">{{ follow_user.profile.favorite_club }}</span>{% endif %}</p>
+	</div>
+	{% if request.user.is_authenticated %}
+	<div class="fl-item-info fl-button">
+		{% if follow_user != request.user %}
+			{% if follow_user in request.user.profile.get_following %}
+				<a href="{% url 'unfollow' follow_user.username %}" class="button mid-short primary follow-btn">Following</a>
+			{% else %}
+				<a href="{% url 'follow' follow_user.username %}" class="button mid-short dark"><span class="primary">Follow</span></a>
+			{% endif %}
+		{% endif %}
+	</div>
+	{% endif %}
+</div>

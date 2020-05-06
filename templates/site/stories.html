@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "My Footy Stories" %}{% endblock %}
+
+{% block content %}
+	<div class="section-wrap">
+		<div class="section">
+			
+			<div class="blog-post-preview v1 column3-wrap">
+				{% for story in stories %}
+					{% include 'story/includes/story_list.html' %}
+				{% endfor %}
+			</div>
+
+		</div>
+	</div>
+
+{% endblock %} 
