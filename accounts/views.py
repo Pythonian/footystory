@@ -4,6 +4,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponseBadRequest, JsonResponse
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, get_object_or_404
@@ -233,6 +234,7 @@ def comments(request, username):
 
 
 @login_required
+@transaction.atomic # ensure that both form classes are saved only if there is no issue with any
 def settings(request, username):
     user = get_object_or_404(
         User, username=username)
