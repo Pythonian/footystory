@@ -158,7 +158,7 @@ def activate(request, uidb64, token):
 @login_required
 def disable(request, username):
     user = get_object_or_404(
-        User, username=username)
+        User, username=username) # username=request.user.username
     if request.method == 'POST':
         # Disable the user's password
         user.set_unusable_password()
